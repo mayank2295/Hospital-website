@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthCare AI Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Animate.css CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #0ea5e9;
+        --primary-dark: #0284c7;
+        --secondary: #10b981;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --gray: #94a3b8;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);
+        min-height: 100vh;
+        margin: 0;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--dark);
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -10px rgba(14, 165, 233, 0.6);
+      }
+
+      .btn-secondary {
+        background: var(--secondary);
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -10px rgba(16, 185, 129, 0.6);
+      }
+
+      .nav-tab {
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-tab:after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 3px;
+        background: var(--primary);
+        transition: all 0.3s ease;
+        border-radius: 3px;
+      }
+
+      .nav-tab:hover:after {
+        width: 60%;
+      }
+
+      .nav-tab.active {
+        color: var(--primary);
+      }
+
+      .nav-tab.active:after {
+        width: 60%;
+      }
+
+      .feature-card {
+        transition: all 0.3s ease;
+        transform-style: preserve-3d;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 30px -10px rgba(14, 165, 233, 0.3);
+      }
+
+      .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .feature-icon {
+        transition: all 0.3s ease;
+      }
+
+      .chat-message {
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      .chat-message.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .slide-up {
+        animation: slideUp 0.5s ease forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .loader {
+        border: 3px solid #e0f2f1;
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1.2s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #messageBox {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: var(--secondary);
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        display: none;
+        max-width: 350px;
+        text-align: center;
+        animation: slideInRight 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+      }
+
+      #messageBox.error {
+        background-color: #ef4444;
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      input,
+      textarea,
+      select {
+        transition: all 0.3s ease;
+        border: 1px solid #cbd5e1;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+      }
+
+      .doctor-card {
+        transition: all 0.3s ease;
+      }
+
+      .doctor-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .floating {
+        animation: floating 6s ease-in-out infinite;
+      }
+
+      @keyframes floating {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      .content-section {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .blob {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(
+          135deg,
+          rgba(14, 165, 233, 0.1) 0%,
+          rgba(16, 185, 129, 0.1) 100%
+        );
+        border-radius: 50%;
+        filter: blur(40px);
+        z-index: -1;
+        animation: blobMove 20s infinite alternate;
+      }
+
+      @keyframes blobMove {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        50% {
+          transform: translate(50px, 50px) rotate(90deg);
+        }
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+      }
+
+      .blob-1 {
+        top: 10%;
+        left: 10%;
+      }
+
+      .blob-2 {
+        bottom: 10%;
+        right: 10%;
+        animation-delay: 5s;
+      }
+
+      .blob-3 {
+        top: 50%;
+        right: 20%;
+        animation-delay: 10s;
+      }
+
+      .blob-4 {
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 15s;
+      }
+
+      .chatbox {
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) #f1f1f1;
+      }
+
+      .chatbox::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .chatbox::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .chatbox::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+      }
+
+      .toggle-form {
+        transition: all 0.5s ease;
+        overflow: hidden;
+      }
+
+      .toggle-form.hidden {
+        max-height: 0;
+        opacity: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .toggle-form.show {
+        max-height: 500px;
+        opacity: 1;
+      }
+
+      .form-container {
+        transition: height 0.5s ease;
+      }
+
+      .user-message {
+        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        border-radius: 18px 18px 0 18px;
+      }
+
+      .bot-message {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border-radius: 18px 18px 18px 0;
+      }
+    </style>
+  </head>
+  <body class="relative overflow-x-hidden">
+    <!-- Background blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+
+    <!-- Message Box -->
+    <div id="messageBox" class="animate__animated"></div>
+
+    <!-- Main Application Container -->
+    <div
+      id="app"
+      class="glass-card w-full max-w-6xl mx-4 my-8 p-8 animate__animated animate__fadeIn"
+    >
+      <!-- Header Section (Always visible) -->
+      <div class="flex flex-col items-center mb-8">
+        <img
+          id="mainImage"
+          src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+          alt="Healthcare"
+          class="rounded-full shadow-xl w-40 h-40 object-cover mb-4 border-4 border-white floating"
+        />
+        <h1
+          id="mainTitle"
+          class="text-5xl font-bold text-center text-sky-800 mb-2 bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent"
+        >
+          HealthCare AI Portal
+        </h1>
+        <p class="text-center text-gray-600 max-w-2xl">
+          Your smart medical assistant, anytime, anywhere. Get personalized
+          healthcare guidance with our AI-powered platform.
+        </p>
+      </div>
+
+      <!-- Login/Authentication Section -->
+      <div id="authSection" class="max-w-md mx-auto slide-up">
+        <div class="form-container">
+          <!-- Login Form -->
+          <form id="emailLoginForm" class="mb-6 toggle-form show">
+            <div class="mb-4">
+              <label
+                for="email"
+                class="block text-sky-700 text-sm font-medium mb-2"
+                >Email Address</label
+              >
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+            <div class="mb-6">
+              <label
+                for="password"
+                class="block text-sky-700 text-sm font-medium mb-2"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full btn-primary font-semibold py-3 px-4 rounded-lg focus:outline-none"
+            >
+              Login to Your Account
+            </button>
+          </form>
+
+          <!-- Sign Up Form -->
+          <form id="emailSignUpForm" class="mb-6 toggle-form hidden">
+            <div class="mb-4">
+              <label
+                for="signupEmail"
+                class="block text-sky-700 text-sm font-medium mb-2"
+                >Email Address</label
+              >
+              <input
+                type="email"
+                id="signupEmail"
+                name="signupEmail"
+                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="signupPassword"
+                class="block text-sky-700 text-sm font-medium mb-2"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="signupPassword"
+                name="signupPassword"
+                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <div class="mb-6">
+              <label
+                for="confirmPassword"
+                class="block text-sky-700 text-sm font-medium mb-2"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full btn-primary font-semibold py-3 px-4 rounded-lg focus:outline-none"
+            >
+              Create Your Account
+            </button>
+          </form>
+        </div>
+
+        <div class="flex items-center justify-between my-6">
+          <hr class="flex-grow border-gray-300" />
+          <span class="px-3 text-gray-500 text-sm">OR</span>
+          <hr class="flex-grow border-gray-300" />
+        </div>
+
+        <button
+          id="googleSignInBtn"
+          class="w-full bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center space-x-3 shadow-sm hover:bg-gray-50 focus:outline-none transition-all hover:shadow-md mb-3"
+        >
+          <img
+            src="https://www.svgrepo.com/show/355037/google.svg"
+            alt="Google logo"
+            class="w-5 h-5"
+          />
+          <span>Continue with Google</span>
+        </button>
+
+        <button
+          id="guestLoginBtn"
+          class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg focus:outline-none transition-all hover:shadow-md"
+        >
+          Continue as Guest
+        </button>
+
+        <p class="text-center text-gray-600 text-sm mt-6">
+          <a
+            href="#"
+            id="toggleSignUp"
+            class="text-sky-600 hover:text-sky-800 font-medium hover:underline transition-all"
+          >
+            Don't have an account? Sign Up
+          </a>
+          <a
+            href="#"
+            id="toggleLogin"
+            class="text-sky-600 hover:text-sky-800 font-medium hover:underline transition-all hidden ml-2"
+          >
+            Already have an account? Login
+          </a>
+        </p>
+      </div>
+
+      <!-- Main Content (hidden until logged in) -->
+      <div id="mainContent" class="hidden w-full">
+        <!-- Dashboard Header & Logout -->
+        <div
+          class="flex flex-col md:flex-row items-center justify-between mb-8"
+        >
+          <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
+            <h3 class="text-2xl font-semibold text-sky-800 mb-1">
+              Welcome back, <span id="userName" class="text-sky-600"></span>!
+            </h3>
+            <span id="userEmail" class="text-sky-500 text-sm"></span>
+            <span id="userIdDisplay" class="text-gray-500 text-xs mt-1"></span>
+          </div>
+          <button
+            id="logoutBtn"
+            class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg focus:outline-none transition-all hover:shadow-md flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Logout
+          </button>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav
+          class="flex justify-center flex-wrap gap-3 mb-8 p-3 bg-white rounded-xl shadow-sm"
+        >
+          <button
+            id="dashboardTabBtn"
+            class="nav-tab active px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2550/2550223.png"
+              alt="Home"
+              class="w-5 h-5 mr-2"
+            />
+            Dashboard
+          </button>
+          <button
+            id="departmentsTabBtn"
+            class="nav-tab px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/295/295117.png"
+              alt="Departments"
+              class="w-5 h-5 mr-2"
+            />
+            Departments
+          </button>
+          <button
+            id="doctorsTabBtn"
+            class="nav-tab px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3004/3004318.png"
+              alt="Doctors"
+              class="w-5 h-5 mr-2"
+            />
+            Doctors
+          </button>
+          <button
+            id="appointmentsTabBtn"
+            class="nav-tab px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3246/3246299.png"
+              alt="Appointments"
+              class="w-5 h-5 mr-2"
+            />
+            Appointments
+          </button>
+          <button
+            id="paymentsTabBtn"
+            class="nav-tab px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2331/2331966.png"
+              alt="Payments"
+              class="w-5 h-5 mr-2"
+            />
+            Payments
+          </button>
+          <button
+            id="recordsTabBtn"
+            class="nav-tab px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3382/3382902.png"
+              alt="Records"
+              class="w-5 h-5 mr-2"
+            />
+            Records
+          </button>
+          <button
+            id="chatbotTabBtn"
+            class="nav-tab px-5 py-2 rounded-lg text-sm font-medium flex items-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png"
+              alt="Chatbot"
+              class="w-5 h-5 mr-2"
+            />
+            AI Assistant
+          </button>
+        </nav>
+
+        <!-- Content Sections -->
+        <div class="content-container">
+          <!-- Dashboard Section -->
+          <div id="dashboardSection" class="content-section">
+            <h2 class="text-3xl font-bold text-sky-800 mb-6">
+              Your Health Dashboard
+            </h2>
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Explore our AI-powered tools and essential healthcare services
+              designed to make your healthcare journey smoother and more
+              informed.
+            </p>
+
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+              <div
+                class="feature-card bg-white p-6 rounded-xl shadow-md border border-gray-100 cursor-pointer"
+                data-section-id="symptomCheckerSection"
+              >
+                <div
+                  class="feature-icon bg-sky-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png"
+                    alt="Symptom Checker"
+                    class="w-8 h-8"
+                  />
+                </div>
+                <h3 class="font-bold text-sky-700 text-xl mb-2 text-center">
+                  Symptom Checker
+                </h3>
+                <p class="text-gray-600 text-center">
+                  Describe symptoms, get AI guidance on possible conditions.
+                </p>
+              </div>
+
+              <div
+                class="feature-card bg-white p-6 rounded-xl shadow-md border border-gray-100 cursor-pointer"
+                data-section-id="doctorFinderSection"
+              >
+                <div
+                  class="feature-icon bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/2983/2983067.png"
+                    alt="Doctor Finder"
+                    class="w-8 h-8"
+                  />
+                </div>
+                <h3 class="font-bold text-sky-700 text-xl mb-2 text-center">
+                  Doctor Finder
+                </h3>
+                <p class="text-gray-600 text-center">
+                  Find and connect with doctors by specialty or location.
+                </p>
+              </div>
+
+              <div
+                class="feature-card bg-white p-6 rounded-xl shadow-md border border-gray-100 cursor-pointer"
+                data-section-id="healthTipsSection"
+              >
+                <div
+                  class="feature-icon bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/2910/2910791.png"
+                    alt="Health Tips"
+                    class="w-8 h-8"
+                  />
+                </div>
+                <h3 class="font-bold text-sky-700 text-xl mb-2 text-center">
+                  Health Tips
+                </h3>
+                <p class="text-gray-600 text-center">
+                  Personalized wellness tips & health advice.
+                </p>
+              </div>
+
+              <div
+                class="feature-card bg-white p-6 rounded-xl shadow-md border border-gray-100 cursor-pointer"
+                data-section-id="appointmentsSection"
+              >
+                <div
+                  class="feature-icon bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3246/3246299.png"
+                    alt="Appointment"
+                    class="w-8 h-8"
+                  />
+                </div>
+                <h3 class="font-bold text-sky-700 text-xl mb-2 text-center">
+                  Book Appointment
+                </h3>
+                <p class="text-gray-600 text-center">
+                  Schedule your medical appointments online.
+                </p>
+              </div>
+
+              <div
+                class="feature-card bg-white p-6 rounded-xl shadow-md border border-gray-100 cursor-pointer"
+                data-section-id="paymentsSection"
+              >
+                <div
+                  class="feature-icon bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/2331/2331966.png"
+                    alt="Payments"
+                    class="w-8 h-8"
+                  />
+                </div>
+                <h3 class="font-bold text-sky-700 text-xl mb-2 text-center">
+                  Online Payments
+                </h3>
+                <p class="text-gray-600 text-center">
+                  View and pay your medical bills securely.
+                </p>
+              </div>
+
+              <div
+                class="feature-card bg-white p-6 rounded-xl shadow-md border border-gray-100 cursor-pointer"
+                data-section-id="recordsSection"
+              >
+                <div
+                  class="feature-icon bg-cyan-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3382/3382902.png"
+                    alt="Records"
+                    class="w-8 h-8"
+                  />
+                </div>
+                <h3 class="font-bold text-sky-700 text-xl mb-2 text-center">
+                  Health Records
+                </h3>
+                <p class="text-gray-600 text-center">
+                  Access your EHRs and lab results anytime.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Departments & Services Section -->
+          <div id="departmentsSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">
+                Departments & Services
+              </h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Explore our wide range of medical departments and specialized
+              services designed to meet all your healthcare needs.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-6">
+              <div
+                class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:border-sky-200 transition-all"
+              >
+                <div class="flex items-start mb-4">
+                  <div class="bg-sky-100 p-3 rounded-lg mr-4">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/3059/3059518.png"
+                      alt="Cardiology"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sky-700 text-lg mb-1">
+                      Cardiology
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                      Expert care for heart conditions, including diagnostics
+                      and treatment plans.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                >
+                  Learn more
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div
+                class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:border-sky-200 transition-all"
+              >
+                <div class="flex items-start mb-4">
+                  <div class="bg-emerald-100 p-3 rounded-lg mr-4">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/2779/2779676.png"
+                      alt="Pediatrics"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sky-700 text-lg mb-1">
+                      Pediatrics
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                      Comprehensive healthcare services for infants, children,
+                      and adolescents.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                >
+                  Learn more
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div
+                class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:border-sky-200 transition-all"
+              >
+                <div class="flex items-start mb-4">
+                  <div class="bg-amber-100 p-3 rounded-lg mr-4">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/2936/2936886.png"
+                      alt="Dermatology"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sky-700 text-lg mb-1">
+                      Dermatology
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                      Specialized care for skin, hair, and nail conditions, from
+                      acne to complex diseases.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                >
+                  Learn more
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div
+                class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:border-sky-200 transition-all"
+              >
+                <div class="flex items-start mb-4">
+                  <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/3059/3059529.png"
+                      alt="Orthopedics"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sky-700 text-lg mb-1">
+                      Orthopedics
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                      Diagnosis and treatment of musculoskeletal injuries and
+                      diseases.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                >
+                  Learn more
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Profiles Section -->
+          <div id="doctorsSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">
+                Our Expert Doctors
+              </h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Meet our team of dedicated healthcare professionals ready to
+              provide you with exceptional care.
+            </p>
+
+            <div
+              class="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-6"
+            >
+              <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <input
+                  type="text"
+                  id="doctorSearchInputPage"
+                  class="flex-grow p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                  placeholder="Search doctors by name, specialty, or location..."
+                />
+                <button
+                  id="searchDoctorsPageBtn"
+                  class="btn-primary font-medium py-3 px-6 rounded-lg flex items-center justify-center"
+                >
+                  <span>Search</span>
+                  <span id="doctorsPageLoader" class="loader hidden"></span>
+                </button>
+              </div>
+            </div>
+
+            <div id="doctorsListOutput" class="grid lg:grid-cols-2 gap-6">
+              <div
+                class="doctor-card bg-white p-6 rounded-xl shadow-md border border-gray-100"
+              >
+                <div class="flex items-start mb-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    alt="Dr. Emily White"
+                    class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-sky-100"
+                  />
+                  <div>
+                    <h5 class="font-bold text-sky-800 text-lg mb-1">
+                      Dr. Emily White
+                    </h5>
+                    <p class="text-sky-600 text-sm mb-1">General Physician</p>
+                    <p class="text-gray-600 text-sm">Springfield, IL</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                  <span class="text-gray-700 text-sm">(555) 123-4567</span>
+                  <button
+                    class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                  >
+                    View Profile
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="doctor-card bg-white p-6 rounded-xl shadow-md border border-gray-100"
+              >
+                <div class="flex items-start mb-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+                    alt="Dr. David Lee"
+                    class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-sky-100"
+                  />
+                  <div>
+                    <h5 class="font-bold text-sky-800 text-lg mb-1">
+                      Dr. David Lee
+                    </h5>
+                    <p class="text-sky-600 text-sm mb-1">Pediatrician</p>
+                    <p class="text-gray-600 text-sm">Metropolis, NY</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                  <span class="text-gray-700 text-sm">(555) 987-6543</span>
+                  <button
+                    class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                  >
+                    View Profile
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointment Scheduling Section -->
+          <div id="appointmentsSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">
+                Schedule Your Appointment
+              </h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Easily book your next medical appointment with our specialists.
+              Select a department, choose your preferred doctor, and pick an
+              available time slot.
+            </p>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-md border border-gray-100"
+            >
+              <div class="grid md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-sky-700 text-sm font-medium mb-2"
+                    >Select Department</label
+                  >
+                  <select
+                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                  >
+                    <option>Cardiology</option>
+                    <option>Pediatrics</option>
+                    <option>Dermatology</option>
+                    <option>Orthopedics</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sky-700 text-sm font-medium mb-2"
+                    >Select Doctor</label
+                  >
+                  <select
+                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                  >
+                    <option>Dr. Emily White</option>
+                    <option>Dr. David Lee</option>
+                    <option>Dr. Sarah Johnson</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sky-700 text-sm font-medium mb-2"
+                    >Select Date</label
+                  >
+                  <input
+                    type="date"
+                    class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <h4 class="font-medium text-sky-700 mb-3">
+                  Available Time Slots
+                </h4>
+                <div
+                  class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3"
+                >
+                  <button
+                    class="bg-sky-100 hover:bg-sky-200 text-sky-700 py-2 px-3 rounded-lg transition-all text-sm"
+                  >
+                    9:00 AM
+                  </button>
+                  <button
+                    class="bg-sky-100 hover:bg-sky-200 text-sky-700 py-2 px-3 rounded-lg transition-all text-sm"
+                  >
+                    10:00 AM
+                  </button>
+                  <button
+                    class="bg-gray-200 text-gray-500 py-2 px-3 rounded-lg text-sm cursor-not-allowed"
+                  >
+                    11:00 AM
+                  </button>
+                  <button
+                    class="bg-sky-100 hover:bg-sky-200 text-sky-700 py-2 px-3 rounded-lg transition-all text-sm"
+                  >
+                    1:00 PM
+                  </button>
+                  <button
+                    class="bg-sky-100 hover:bg-sky-200 text-sky-700 py-2 px-3 rounded-lg transition-all text-sm"
+                  >
+                    2:00 PM
+                  </button>
+                  <button
+                    class="bg-sky-100 hover:bg-sky-200 text-sky-700 py-2 px-3 rounded-lg transition-all text-sm"
+                  >
+                    3:00 PM
+                  </button>
+                </div>
+              </div>
+
+              <div class="mt-8">
+                <button
+                  class="btn-primary font-medium py-3 px-6 rounded-lg w-full"
+                >
+                  Confirm Appointment
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Online Payments Section -->
+          <div id="paymentsSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">Online Payments</h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Securely view and pay your outstanding medical bills with our
+              encrypted payment system.
+            </p>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-md border border-gray-100"
+            >
+              <h3 class="font-bold text-sky-700 text-xl mb-6">
+                Your Billing Summary
+              </h3>
+
+              <div class="space-y-4 mb-8">
+                <div
+                  class="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
+                >
+                  <div>
+                    <h4 class="font-medium text-sky-800">
+                      Invoice #20240715-001
+                    </h4>
+                    <p class="text-gray-600 text-sm">Consultation Fee</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-semibold text-sky-800">$150.00</p>
+                    <p class="text-red-500 text-sm">Due: 2025-08-15</p>
+                  </div>
+                </div>
+
+                <div
+                  class="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
+                >
+                  <div>
+                    <h4 class="font-medium text-sky-800">
+                      Invoice #20240710-002
+                    </h4>
+                    <p class="text-gray-600 text-sm">Lab Tests</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-semibold text-sky-800">$85.50</p>
+                    <p class="text-green-500 text-sm">Paid: 2025-07-12</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-t pt-6">
+                <div class="flex justify-between items-center mb-4">
+                  <span class="font-medium text-gray-700"
+                    >Total Outstanding</span
+                  >
+                  <span class="font-bold text-sky-800">$150.00</span>
+                </div>
+
+                <button
+                  class="btn-primary font-medium py-3 px-6 rounded-lg w-full"
+                >
+                  Proceed to Secure Payment
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Patient Portal & Records Section -->
+          <div id="recordsSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">
+                Health Records & History
+              </h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Access your electronic health records, lab results, and
+              prescription history securely in one place.
+            </p>
+
+            <div
+              class="bg-white p-8 rounded-xl shadow-md border border-gray-100"
+            >
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div
+                  class="p-5 border border-gray-200 rounded-lg hover:border-sky-300 transition-all"
+                >
+                  <div
+                    class="bg-sky-100 w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                  >
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/2936/2936886.png"
+                      alt="Lab Results"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <h4 class="font-medium text-sky-800 mb-2">Lab Results</h4>
+                  <p class="text-gray-600 text-sm mb-3">
+                    View your latest test results and reports.
+                  </p>
+                  <button
+                    class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                  >
+                    View Results
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div
+                  class="p-5 border border-gray-200 rounded-lg hover:border-sky-300 transition-all"
+                >
+                  <div
+                    class="bg-emerald-100 w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                  >
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/3059/3059518.png"
+                      alt="Prescriptions"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <h4 class="font-medium text-sky-800 mb-2">Prescriptions</h4>
+                  <p class="text-gray-600 text-sm mb-3">
+                    Access your current and past medications.
+                  </p>
+                  <button
+                    class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                  >
+                    View Prescriptions
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div
+                  class="p-5 border border-gray-200 rounded-lg hover:border-sky-300 transition-all"
+                >
+                  <div
+                    class="bg-amber-100 w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                  >
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/3059/3059529.png"
+                      alt="Visit History"
+                      class="w-6 h-6"
+                    />
+                  </div>
+                  <h4 class="font-medium text-sky-800 mb-2">Visit History</h4>
+                  <p class="text-gray-600 text-sm mb-3">
+                    Review your past appointments and summaries.
+                  </p>
+                  <button
+                    class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all"
+                  >
+                    View History
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 ml-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Health Tips Section -->
+          <div id="healthTipsSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">
+                Health & Wellness Tips
+              </h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Get personalized health tips, diet advice, and mental wellness
+              recommendations powered by AI.
+            </p>
+
+            <div
+              class="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-6"
+            >
+              <button
+                id="generateTipsBtn"
+                class="btn-primary font-medium py-3 px-6 rounded-lg flex items-center justify-center mx-auto"
+              >
+                <span>Generate Health Tips</span>
+                <span id="tipsLoader" class="loader hidden"></span>
+              </button>
+            </div>
+
+            <div
+              id="healthTipsOutput"
+              class="p-6 bg-white rounded-xl shadow-md border border-gray-100 text-gray-800"
+            >
+              <div class="text-center text-gray-500">
+                Click the button above to generate personalized health tips
+              </div>
+            </div>
+          </div>
+
+          <!-- Chatbot Section -->
+          <div id="chatbotSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">
+                Healthcare AI Assistant
+              </h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Ask our AI assistant about symptoms, wellness, diet, or mental
+              health. Remember this is not a substitute for professional medical
+              advice.
+            </p>
+
+            <div
+              class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden"
+            >
+              <div
+                class="p-4 bg-sky-50 border-b border-gray-200 flex items-center"
+              >
+                <div class="bg-sky-100 p-2 rounded-full mr-3">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png"
+                    alt="AI Assistant"
+                    class="w-6 h-6"
+                  />
+                </div>
+                <h4 class="font-medium text-sky-800">
+                  Healthcare AI Assistant
+                </h4>
+              </div>
+
+              <div id="chatbox" class="h-96 p-4 overflow-y-auto">
+                <div class="bot-message show p-4 mb-3 max-w-[80%]">
+                  👋 Hi! I'm your healthcare assistant.<br />Ask me about
+                  symptoms, wellness, diet, or mental health.
+                </div>
+              </div>
+
+              <div class="p-4 border-t border-gray-200 bg-white">
+                <div class="flex gap-3">
+                  <input
+                    type="text"
+                    id="chatInput"
+                    class="flex-grow p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-300 transition-all"
+                    placeholder="Type your health question..."
+                  />
+                  <button
+                    id="sendChatBtn"
+                    class="btn-primary font-medium py-3 px-5 rounded-lg flex items-center justify-center"
+                  >
+                    <span>Send</span>
+                    <span id="chatLoader" class="loader hidden"></span>
+                  </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">
+                  Note: This AI provides general information only, not medical
+                  advice.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Symptom Checker Section -->
+          <div id="symptomCheckerSection" class="content-section hidden">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-3xl font-bold text-sky-800">Symptom Checker</h2>
+              <button
+                onclick="showSection('dashboardSection')"
+                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg focus:outline-none transition-all flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Back
+              </button>
+            </div>
+
+            <p class="text-gray-600 mb-8 max-w-3xl">
+              Describe your symptoms below. Our AI can provide general guidance,
+              but this is NOT a substitute for professional medical advice.
+              Always consult a doctor for diagnosis and treatment.
+            </p>
+
+            <div
+              class="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-6"
+            >
+              <textarea
+                id="symptomInput"
+                class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-300 resize-y transition-all"
+                rows="5"
+                placeholder="e.g., 'I have a headache, fever, and sore throat for 2 days. What could it be?'"
+              ></textarea>
+            </div>
+
+            <div class="flex justify-center mb-8">
+              <button
+                id="checkSymptomsBtn"
+                class="btn-primary font-medium py-3 px-6 rounded-lg flex items-center justify-center"
+              >
+                <span>Check Symptoms</span>
+                <span id="symptomLoader" class="loader hidden"></span>
+              </button>
+            </div>
+
+            <div
+              id="symptomOutput"
+              class="p-6 bg-white rounded-xl shadow-md border border-gray-100 text-gray-800"
+            >
+              <div class="text-center text-gray-500">
+                Your symptom analysis will appear here after you describe your
+                symptoms and click the button above.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center text-gray-500 text-sm mt-8">
+          Your data is private and secure. Powered by AI & Firebase.
+        </p>
+      </div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        signOut,
+        onAuthStateChanged,
+        signInAnonymously,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+      // Firebase Config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBjoYSAWMB9o6HT0ciGECgkOeFwLVpfzN4",
+        authDomain: "login-page-3302c.firebaseapp.com",
+        projectId: "login-page-3302c",
+        storageBucket: "login-page-3302c.appspot.com",
+        messagingSenderId: "501714618930",
+        appId: "1:501714618930:web:d43c6004f6aa0246578a2b",
+        measurementId: "G-T3XKSM7XZ9",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Message display function
+      function showMessage(message, isError = false) {
+        const messageBox = document.getElementById("messageBox");
+        if (messageBox) {
+          messageBox.textContent = message;
+          messageBox.className = "animate__animated animate__slideInRight";
+          if (isError) messageBox.classList.add("error");
+          messageBox.style.display = "block";
+
+          setTimeout(() => {
+            messageBox.classList.remove("animate__slideInRight");
+            messageBox.classList.add("animate__fadeOut");
+            setTimeout(() => {
+              messageBox.style.display = "none";
+              messageBox.classList.remove("animate__fadeOut");
+            }, 500);
+          }, 2000);
+        }
+      }
+
+      // DOM Elements
+      const authSection = document.getElementById("authSection");
+      const googleSignInBtn = document.getElementById("googleSignInBtn");
+      const emailLoginForm = document.getElementById("emailLoginForm");
+      const emailSignUpForm = document.getElementById("emailSignUpForm");
+      const guestLoginBtn = document.getElementById("guestLoginBtn");
+      const mainContentDiv = document.getElementById("mainContent");
+      const userNameSpan = document.getElementById("userName");
+      const userEmailSpan = document.getElementById("userEmail");
+      const userIdDisplay = document.getElementById("userIdDisplay");
+      const mainTitle = document.getElementById("mainTitle");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const toggleSignUpLink = document.getElementById("toggleSignUp");
+      const toggleLoginLink = document.getElementById("toggleLogin");
+
+      // Navigation elements
+      const navTabs = document.querySelectorAll(".nav-tab");
+
+      // Content sections
+      const contentSections = {
+        dashboard: document.getElementById("dashboardSection"),
+        departments: document.getElementById("departmentsSection"),
+        doctors: document.getElementById("doctorsSection"),
+        appointments: document.getElementById("appointmentsSection"),
+        payments: document.getElementById("paymentsSection"),
+        records: document.getElementById("recordsSection"),
+        healthTips: document.getElementById("healthTipsSection"),
+        chatbot: document.getElementById("chatbotSection"),
+        symptomChecker: document.getElementById("symptomCheckerSection"),
+      };
+
+      // Feature cards
+      const featureCards = document.querySelectorAll(".feature-card");
+
+      // Chatbot elements
+      const chatbox = document.getElementById("chatbox");
+      const chatInput = document.getElementById("chatInput");
+      const sendChatBtn = document.getElementById("sendChatBtn");
+      const chatLoader = document.getElementById("chatLoader");
+
+      // Health Tips elements
+      const generateTipsBtn = document.getElementById("generateTipsBtn");
+      const healthTipsOutput = document.getElementById("healthTipsOutput");
+      const tipsLoader = document.getElementById("tipsLoader");
+
+      // Symptom Checker elements
+      const symptomInput = document.getElementById("symptomInput");
+      const checkSymptomsBtn = document.getElementById("checkSymptomsBtn");
+      const symptomOutput = document.getElementById("symptomOutput");
+      const symptomLoader = document.getElementById("symptomLoader");
+
+      // Doctor Finder elements
+      const doctorSearchInputPage = document.getElementById(
+        "doctorSearchInputPage"
+      );
+      const searchDoctorsPageBtn = document.getElementById(
+        "searchDoctorsPageBtn"
+      );
+      const doctorsPageLoader = document.getElementById("doctorsPageLoader");
+      const doctorsListOutput = document.getElementById("doctorsListOutput");
+
+      // Chat history
+      let chatHistory = [
+        {
+          role: "model",
+          parts: [
+            {
+              text: "👋 Hi! I'm your healthcare assistant.\nAsk me about symptoms, wellness, diet, or mental health.",
+            },
+          ],
+        },
+      ];
+
+      // Function to show a specific content section
+      function showSection(sectionToShowId) {
+        // Hide all content sections
+        Object.values(contentSections).forEach((section) => {
+          if (section) section.classList.add("hidden");
+        });
+
+        // Show the requested section
+        const sectionToShow =
+          contentSections[
+            sectionToShowId.replace("Section", "").toLowerCase()
+          ] || document.getElementById(sectionToShowId);
+        if (sectionToShow) {
+          sectionToShow.classList.remove("hidden");
+        }
+
+        // Update active tab styling
+        navTabs.forEach((tab) => {
+          if (tab) {
+            const tabId = tab.id.replace("TabBtn", "");
+            if (
+              tabId.toLowerCase() ===
+              sectionToShowId.replace("Section", "").toLowerCase()
+            ) {
+              tab.classList.add("active");
+            } else {
+              tab.classList.remove("active");
+            }
+          }
+        });
+      }
+
+      // Event listeners for feature cards
+      featureCards.forEach((card) => {
+        card.addEventListener("click", () => {
+          const sectionId = card.getAttribute("data-section-id");
+          showSection(sectionId);
+        });
+      });
+
+      // Event listeners for navigation tabs
+      navTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const sectionId = tab.id.replace("TabBtn", "Section");
+          showSection(sectionId);
+        });
+      });
+
+      // Email login
+      if (emailLoginForm) {
+        emailLoginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = emailLoginForm.email.value;
+          const password = emailLoginForm.password.value;
+
+          try {
+            const userCredential = await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            showMessage("Successfully logged in!");
+          } catch (error) {
+            showMessage(`Login failed: ${error.message}`, true);
+          }
+        });
+      }
+
+      // Google Sign-In
+      if (googleSignInBtn) {
+        googleSignInBtn.addEventListener("click", async () => {
+          const provider = new GoogleAuthProvider();
+
+          try {
+            const result = await signInWithPopup(auth, provider);
+            showMessage("Google Sign-In successful!");
+          } catch (error) {
+            showMessage(`Google Sign-In failed: ${error.message}`, true);
+          }
+        });
+      }
+
+      // Guest Login
+      if (guestLoginBtn) {
+        guestLoginBtn.addEventListener("click", async () => {
+          try {
+            await signInAnonymously(auth);
+            showMessage("Logged in as Guest!");
+          } catch (error) {
+            showMessage(`Guest login failed: ${error.message}`, true);
+          }
+        });
+      }
+
+      // Email Sign Up
+      if (emailSignUpForm) {
+        emailSignUpForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = emailSignUpForm.signupEmail.value;
+          const password = emailSignUpForm.signupPassword.value;
+          const confirmPassword = emailSignUpForm.confirmPassword.value;
+
+          if (password !== confirmPassword) {
+            showMessage("Passwords do not match.", true);
+            return;
+          }
+
+          try {
+            const userCredential = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            showMessage("Account created successfully! You are now logged in.");
+          } catch (error) {
+            showMessage(`Sign up failed: ${error.message}`, true);
+          }
+        });
+      }
+
+      // Toggle between Login and Sign Up forms
+      if (toggleSignUpLink && toggleLoginLink) {
+        toggleSignUpLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          emailLoginForm.classList.remove("show");
+          emailLoginForm.classList.add("hidden");
+          emailSignUpForm.classList.remove("hidden");
+          emailSignUpForm.classList.add("show");
+          toggleSignUpLink.classList.add("hidden");
+          toggleLoginLink.classList.remove("hidden");
+          mainTitle.textContent = "Create Account";
+        });
+
+        toggleLoginLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          emailSignUpForm.classList.remove("show");
+          emailSignUpForm.classList.add("hidden");
+          emailLoginForm.classList.remove("hidden");
+          emailLoginForm.classList.add("show");
+          toggleSignUpLink.classList.remove("hidden");
+          toggleLoginLink.classList.add("hidden");
+          mainTitle.textContent = "HealthCare AI Portal";
+        });
+      }
+
+      // Logout
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+          try {
+            await signOut(auth);
+            showMessage("You have been logged out.");
+          } catch (error) {
+            showMessage(`Logout failed: ${error.message}`, true);
+          }
+        });
+      }
+
+      // Auth state observer
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in
+          authSection.classList.add("hidden");
+          mainContentDiv.classList.remove("hidden");
+          userNameSpan.textContent =
+            user.displayName || (user.isAnonymous ? "Guest User" : "User");
+          userEmailSpan.textContent =
+            user.email || (user.isAnonymous ? "N/A (Guest)" : "N/A");
+          userIdDisplay.textContent = `User ID: ${user.uid.substring(0, 8)}...`;
+          mainTitle.textContent = "HealthCare AI Portal";
+          showSection("dashboardSection");
+        } else {
+          // User is signed out
+          authSection.classList.remove("hidden");
+          mainContentDiv.classList.add("hidden");
+          emailLoginForm.classList.remove("hidden");
+          emailSignUpForm.classList.add("hidden");
+          toggleSignUpLink.classList.remove("hidden");
+          toggleLoginLink.classList.add("hidden");
+          mainTitle.textContent = "HealthCare AI Portal";
+        }
+      });
+
+      // Chatbot functionality
+      if (sendChatBtn && chatInput) {
+        sendChatBtn.addEventListener("click", sendChatMessage);
+        chatInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendChatMessage();
+          }
+        });
+      }
+
+      async function sendChatMessage() {
+        const userMessage = chatInput.value.trim();
+        if (!userMessage) {
+          showMessage("Please enter your question.", true);
+          return;
+        }
+
+        // Add user message to chat
+        const userMessageDiv = document.createElement("div");
+        userMessageDiv.classList.add("chat-message", "user-message", "show");
+        userMessageDiv.textContent = userMessage;
+        chatbox.appendChild(userMessageDiv);
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        // Clear input and disable button
+        chatInput.value = "";
+        sendChatBtn.disabled = true;
+        chatLoader.classList.remove("hidden");
+
+        // Add to chat history
+        chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+        try {
+          // Simulate API call (replace with actual Gemini API call)
+          const botResponse = await simulateGeminiCall(userMessage);
+
+          // Add bot response to chat
+          const botMessageDiv = document.createElement("div");
+          botMessageDiv.classList.add("chat-message", "bot-message");
+          botMessageDiv.textContent = botResponse;
+          chatbox.appendChild(botMessageDiv);
+
+          // Trigger animation after element is added
+          setTimeout(() => {
+            botMessageDiv.classList.add("show");
+            chatbox.scrollTop = chatbox.scrollHeight;
+          }, 10);
+
+          // Add to chat history
+          chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+        } catch (error) {
+          showMessage(`Chatbot Error: ${error.message}`, true);
+          const errorMessageDiv = document.createElement("div");
+          errorMessageDiv.classList.add("chat-message", "bot-message");
+          errorMessageDiv.textContent =
+            "Error connecting to chatbot. Please try again.";
+          chatbox.appendChild(errorMessageDiv);
+          setTimeout(() => {
+            errorMessageDiv.classList.add("show");
+            chatbox.scrollTop = chatbox.scrollHeight;
+          }, 10);
+        } finally {
+          chatLoader.classList.add("hidden");
+          sendChatBtn.disabled = false;
+          chatInput.focus();
+        }
+      }
+
+      // Simulate Gemini API call (replace with actual implementation)
+      function simulateGeminiCall(message) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const responses = [
+              "Based on your symptoms, it could be a common cold. Make sure to rest and stay hydrated. If symptoms persist or worsen, consult a doctor.",
+              "I recommend drinking plenty of fluids and getting adequate rest. Over-the-counter pain relievers may help with discomfort.",
+              "This sounds like it could be seasonal allergies. Try antihistamines and avoid known allergens. If symptoms persist, see a healthcare provider.",
+              "Your symptoms could indicate several possible conditions. It's best to consult with a doctor for proper diagnosis and treatment.",
+              "For these symptoms, I suggest monitoring your temperature and resting. If you develop a high fever or difficulty breathing, seek medical attention immediately.",
+            ];
+            resolve(responses[Math.floor(Math.random() * responses.length)]);
+          }, 1500);
+        });
+      }
+
+      // Health Tips generation
+      if (generateTipsBtn) {
+        generateTipsBtn.addEventListener("click", async () => {
+          healthTipsOutput.textContent = "";
+          tipsLoader.classList.remove("hidden");
+          generateTipsBtn.disabled = true;
+
+          try {
+            // Simulate API call (replace with actual Gemini API call)
+            const tips = await simulateHealthTipsCall();
+            healthTipsOutput.innerHTML = tips;
+          } catch (error) {
+            healthTipsOutput.textContent =
+              "Error generating health tips. Please try again.";
+            showMessage(`Error: ${error.message}`, true);
+          } finally {
+            tipsLoader.classList.add("hidden");
+            generateTipsBtn.disabled = false;
+          }
+        });
+      }
+
+      // Simulate Health Tips API call
+      function simulateHealthTipsCall() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const tips = `
+              <h4 class="font-medium text-sky-800 mb-3">Your Personalized Health Tips</h4>
+              <ol class="list-decimal list-inside space-y-2">
+                <li>Stay hydrated by drinking at least 8 glasses of water daily to support overall health.</li>
+                <li>Incorporate 30 minutes of moderate exercise into your daily routine for cardiovascular health.</li>
+                <li>Practice mindfulness meditation for 10 minutes each day to reduce stress and improve mental well-being.</li>
+                <li>Include a variety of colorful fruits and vegetables in your diet for essential vitamins and minerals.</li>
+                <li>Aim for 7-9 hours of quality sleep each night to allow your body to rest and recover.</li>
+              </ol>
+              <p class="text-sm text-gray-600 mt-4">Remember to consult with your healthcare provider before making significant changes to your lifestyle.</p>
+            `;
+            resolve(tips);
+          }, 2000);
+        });
+      }
+
+      // Symptom Checker
+      if (checkSymptomsBtn) {
+        checkSymptomsBtn.addEventListener("click", async () => {
+          const symptomDescription = symptomInput.value.trim();
+          if (!symptomDescription) {
+            showMessage("Please describe your symptoms.", true);
+            return;
+          }
+
+          symptomOutput.textContent = "";
+          symptomLoader.classList.remove("hidden");
+          checkSymptomsBtn.disabled = true;
+
+          try {
+            // Simulate API call (replace with actual Gemini API call)
+            const analysis = await simulateSymptomAnalysisCall(
+              symptomDescription
+            );
+            symptomOutput.innerHTML = analysis;
+          } catch (error) {
+            symptomOutput.textContent =
+              "Error checking symptoms. Please try again.";
+            showMessage(`Error: ${error.message}`, true);
+          } finally {
+            symptomLoader.classList.add("hidden");
+            checkSymptomsBtn.disabled = false;
+          }
+        });
+      }
+
+      // Simulate Symptom Analysis API call
+      function simulateSymptomAnalysisCall(symptoms) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const analysis = `
+              <h4 class="font-medium text-sky-800 mb-3">Symptom Analysis</h4>
+              <p class="mb-3">Based on your description: "${symptoms}"</p>
+              
+              <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-4">
+                <p class="font-medium text-amber-800">Important Note:</p>
+                <p class="text-amber-700">This is not a medical diagnosis. Always consult with a healthcare professional for proper evaluation and treatment.</p>
+              </div>
+              
+              <h5 class="font-medium text-sky-700 mb-2">Possible Considerations:</h5>
+              <ul class="list-disc list-inside space-y-1 mb-4">
+                <li>Common cold or viral infection</li>
+                <li>Seasonal allergies</li>
+                <li>Mild dehydration</li>
+              </ul>
+              
+              <h5 class="font-medium text-sky-700 mb-2">Recommended Actions:</h5>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Rest and stay hydrated</li>
+                <li>Monitor your temperature</li>
+                <li>Consider over-the-counter remedies for symptom relief</li>
+                <li>Seek medical attention if symptoms worsen or persist beyond 3 days</li>
+              </ul>
+            `;
+            resolve(analysis);
+          }, 2500);
+        });
+      }
+
+      // Doctor Finder
+      if (searchDoctorsPageBtn) {
+        searchDoctorsPageBtn.addEventListener("click", async () => {
+          const searchCriteria = doctorSearchInputPage.value.trim();
+          if (!searchCriteria) {
+            showMessage(
+              "Please enter a specialty or location to find doctors.",
+              true
+            );
+            return;
+          }
+
+          doctorsListOutput.innerHTML = "";
+          doctorsPageLoader.classList.remove("hidden");
+          searchDoctorsPageBtn.disabled = true;
+
+          try {
+            // Simulate API call (replace with actual Gemini API call)
+            const doctors = await simulateDoctorSearchCall(searchCriteria);
+
+            if (doctors.length > 0) {
+              doctors.forEach((doctor) => {
+                const doctorCard = document.createElement("div");
+                doctorCard.classList.add(
+                  "doctor-card",
+                  "bg-white",
+                  "p-6",
+                  "rounded-xl",
+                  "shadow-md",
+                  "border",
+                  "border-gray-100"
+                );
+                doctorCard.innerHTML = `
+                  <div class="flex items-start mb-4">
+                    <img src="${doctor.image}" alt="${doctor.name}" class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-sky-100" />
+                    <div>
+                      <h5 class="font-bold text-sky-800 text-lg mb-1">${doctor.name}</h5>
+                      <p class="text-sky-600 text-sm mb-1">${doctor.specialty}</p>
+                      <p class="text-gray-600 text-sm">${doctor.location}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between mt-4">
+                    <span class="text-gray-700 text-sm">${doctor.contact}</span>
+                    <button class="text-sky-600 hover:text-sky-800 font-medium text-sm flex items-center transition-all">
+                      View Profile
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                `;
+                doctorsListOutput.appendChild(doctorCard);
+
+                // Add animation to each card
+                setTimeout(() => {
+                  doctorCard.classList.add(
+                    "animate__animated",
+                    "animate__fadeInUp"
+                  );
+                }, 10);
+              });
+            } else {
+              doctorsListOutput.innerHTML = `<p class="text-center text-gray-500">No doctors found matching your criteria. Please try a different search.</p>`;
+            }
+          } catch (error) {
+            doctorsListOutput.innerHTML = `<p class="text-center text-red-500">Error finding doctors. Please try again later.</p>`;
+            showMessage(`Error: ${error.message}`, true);
+          } finally {
+            doctorsPageLoader.classList.add("hidden");
+            searchDoctorsPageBtn.disabled = false;
+          }
+        });
+      }
+
+      // Simulate Doctor Search API call
+      function simulateDoctorSearchCall(criteria) {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const specialties = [
+              "Cardiologist",
+              "Pediatrician",
+              "Dermatologist",
+              "Orthopedic Surgeon",
+            ];
+            const locations = [
+              "New York, NY",
+              "Los Angeles, CA",
+              "Chicago, IL",
+              "Houston, TX",
+            ];
+            const names = [
+              "Dr. Emily White",
+              "Dr. David Lee",
+              "Dr. Sarah Johnson",
+              "Dr. Michael Brown",
+            ];
+            const images = [
+              "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
+              "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
+              "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
+              "https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
+            ];
+
+            const doctors = [];
+            for (let i = 0; i < 4; i++) {
+              doctors.push({
+                name: names[i],
+                specialty:
+                  specialties[Math.floor(Math.random() * specialties.length)],
+                location:
+                  locations[Math.floor(Math.random() * locations.length)],
+                contact: `(555) ${Math.floor(
+                  100 + Math.random() * 900
+                )}-${Math.floor(1000 + Math.random() * 9000)}`,
+                image: images[i],
+              });
+            }
+
+            resolve(doctors);
+          }, 2000);
+        });
+      }
+    </script>
+  </body>
+</html>
